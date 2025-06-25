@@ -1,35 +1,37 @@
-# application.yml
-
 spring:
   application:
     name: SecondHandHouseBackend
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/SecondHandHouse?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/SecondHandHouse?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root
-    password: "1234"  # ?????????????
+    password: "1234"
 
-
-# MyBatis-Plus ??
+# MyBatis-Plus 配置
 mybatis-plus:
   configuration:
-    # ??????
+    # 默认枚举类型处理器
     default-enum-type-handler: org.apache.ibatis.type.EnumTypeHandler
-    # ??MyBatis??
-    map-underscore-to-camel-case: true  # ??????????????
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # ????
+    # 是否开启 MyBatis 日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 是否开启自动驼峰命名规则映射
+    map-underscore-to-camel-case: true
 
-  # ????
+  # 全局配置
   global-config:
     db-config:
-      id-type: auto  # ????
-      logic-delete-field: deleted  # ????????????
-      logic-not-delete-value: 0    # ??????
-      logic-delete-value: 1        # ?????
+      # 主键类型
+      id-type: auto
+      # 逻辑删除字段
+      logic-delete-field: deleted
+      # 逻辑未删除值
+      logic-not-delete-value: 0
+      # 逻辑删除值
+      logic-delete-value: 1
 
-# ?????????
+# 服务器配置
 server:
   port: 8080
   servlet:
-    context-path: /  # ???????
+    context-path: /  # 根路径

@@ -1,5 +1,6 @@
 package org.secondhand.secondhandhousebackend.controller;
 
+import org.secondhand.secondhandhousebackend.DTO.Result;
 import org.secondhand.secondhandhousebackend.entity.Informationcategories;
 import org.secondhand.secondhandhousebackend.service.InformationcategoriesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,32 +20,53 @@ public class InformationcategoriesController {
 
     // 创建新的资讯分类
     @PostMapping
-    public boolean createInfoCategory(@RequestBody Informationcategories infoCategory) {
-        return informationcategoriesService.save(infoCategory);
+    public Result createInfoCategory(@RequestBody Informationcategories infoCategory) {
+        boolean success = informationcategoriesService.save(infoCategory);
+        if (success) {
+            return Result.ok();
+        } else {
+            return Result.fail("Failed to create info category");
+        }
     }
 
     // 更新资讯分类信息
     @PutMapping("/{infocategoryid}")
-    public boolean updateInfoCategory(@PathVariable Integer infocategoryid, @RequestBody Informationcategories infoCategory) {
+    public Result updateInfoCategory(@PathVariable Integer infocategoryid, @RequestBody Informationcategories infoCategory) {
         infoCategory.setInfocategoryid(infocategoryid);
-        return informationcategoriesService.updateById(infoCategory);
+        boolean success = informationcategoriesService.updateById(infoCategory);
+        if (success) {
+            return Result.ok();
+        } else {
+            return Result.fail("Failed to update info category");
+        }
     }
 
     // 删除资讯分类
     @DeleteMapping("/{infocategoryid}")
-    public boolean deleteInfoCategory(@PathVariable Integer infocategoryid) {
-        return informationcategoriesService.removeById(infocategoryid);
+    public Result deleteInfoCategory(@PathVariable Integer infocategoryid) {
+        boolean success = informationcategoriesService.removeById(infocategoryid);
+        if (success) {
+            return Result.ok();
+        } else {
+            return Result.fail("Failed to delete info category");
+        }
     }
 
     // 获取单个资讯分类详情
     @GetMapping("/{infocategoryid}")
-    public Informationcategories getInfoCategory(@PathVariable Integer infocategoryid) {
-        return informationcategoriesService.getById(infocategoryid);
+    public Result getInfoCategory(@PathVariable Integer infocategoryid) {
+        Informationcategories infoCategory = informationcategoriesService.getById(infocategoryid);
+        if (infoCategory != null) {
+            return Result.ok(infoCategory);
+        } else {
+            return Result.fail("Info category not found");
+        }
     }
 
     // 获取所有资讯分类
     @GetMapping
-    public List<Informationcategories> getAllInfoCategories() {
-        return informationcategoriesService.list();
+    public Result getAllInfoCategories() {
+        List<Informationcategories> infoCategories = informationcategoriesService.list();
+        return Result.ok(infoCategories);
     }
 }

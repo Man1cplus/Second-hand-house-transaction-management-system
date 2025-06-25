@@ -1,5 +1,6 @@
 package org.secondhand.secondhandhousebackend.controller;
 
+import org.secondhand.secondhandhousebackend.DTO.Result;
 import org.secondhand.secondhandhousebackend.entity.Propertycategories;
 import org.secondhand.secondhandhousebackend.service.PropertycategoriesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,32 +17,53 @@ public class PropertycategoriesController {
 
     // 创建新的房源分类
     @PostMapping
-    public boolean createPropertyCategory(@RequestBody Propertycategories propertyCategory) {
-        return propertycategoriesService.save(propertyCategory);
+    public Result createPropertyCategory(@RequestBody Propertycategories propertyCategory) {
+        boolean success = propertycategoriesService.save(propertyCategory);
+        if (success) {
+            return Result.ok();
+        } else {
+            return Result.fail("Failed to create property category");
+        }
     }
 
     // 更新房源分类信息
     @PutMapping("/{categoryid}")
-    public boolean updatePropertyCategory(@PathVariable Integer categoryid, @RequestBody Propertycategories propertyCategory) {
+    public Result updatePropertyCategory(@PathVariable Integer categoryid, @RequestBody Propertycategories propertyCategory) {
         propertyCategory.setCategoryid(categoryid);
-        return propertycategoriesService.updateById(propertyCategory);
+        boolean success = propertycategoriesService.updateById(propertyCategory);
+        if (success) {
+            return Result.ok();
+        } else {
+            return Result.fail("Failed to update property category");
+        }
     }
 
     // 删除房源分类
     @DeleteMapping("/{categoryid}")
-    public boolean deletePropertyCategory(@PathVariable Integer categoryid) {
-        return propertycategoriesService.removeById(categoryid);
+    public Result deletePropertyCategory(@PathVariable Integer categoryid) {
+        boolean success = propertycategoriesService.removeById(categoryid);
+        if (success) {
+            return Result.ok();
+        } else {
+            return Result.fail("Failed to delete property category");
+        }
     }
 
     // 获取单个房源分类详情
     @GetMapping("/{categoryid}")
-    public Propertycategories getPropertyCategory(@PathVariable Integer categoryid) {
-        return propertycategoriesService.getById(categoryid);
+    public Result getPropertyCategory(@PathVariable Integer categoryid) {
+        Propertycategories propertyCategory = propertycategoriesService.getById(categoryid);
+        if (propertyCategory != null) {
+            return Result.ok(propertyCategory);
+        } else {
+            return Result.fail("Property category not found");
+        }
     }
 
     // 获取所有房源分类
     @GetMapping
-    public List<Propertycategories> getAllPropertyCategories() {
-        return propertycategoriesService.list();
+    public Result getAllPropertyCategories() {
+        List<Propertycategories> propertyCategories = propertycategoriesService.list();
+        return Result.ok(propertyCategories);
     }
 }

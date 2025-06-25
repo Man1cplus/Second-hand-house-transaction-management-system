@@ -1,5 +1,6 @@
 package org.secondhand.secondhandhousebackend.controller;
 
+import org.secondhand.secondhandhousebackend.DTO.Result;
 import org.secondhand.secondhandhousebackend.entity.Carouselimages;
 import org.secondhand.secondhandhousebackend.service.CarouselimagesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,32 +17,53 @@ public class CarouselimagesController {
 
     // 创建新的轮播图
     @PostMapping
-    public boolean createCarouselimage(@RequestBody Carouselimages carouselimage) {
-        return carouselimagesService.save(carouselimage);
+    public Result createCarouselimage(@RequestBody Carouselimages carouselimage) {
+        boolean success = carouselimagesService.save(carouselimage);
+        if (success) {
+            return Result.ok();
+        } else {
+            return Result.fail("Failed to create carousel image");
+        }
     }
 
     // 更新轮播图信息
     @PutMapping("/{imageid}")
-    public boolean updateCarouselimage(@PathVariable Integer imageid, @RequestBody Carouselimages carouselimage) {
+    public Result updateCarouselimage(@PathVariable Integer imageid, @RequestBody Carouselimages carouselimage) {
         carouselimage.setImageid(imageid);
-        return carouselimagesService.updateById(carouselimage);
+        boolean success = carouselimagesService.updateById(carouselimage);
+        if (success) {
+            return Result.ok();
+        } else {
+            return Result.fail("Failed to update carousel image");
+        }
     }
 
     // 删除轮播图
     @DeleteMapping("/{imageid}")
-    public boolean deleteCarouselimage(@PathVariable Integer imageid) {
-        return carouselimagesService.removeById(imageid);
+    public Result deleteCarouselimage(@PathVariable Integer imageid) {
+        boolean success = carouselimagesService.removeById(imageid);
+        if (success) {
+            return Result.ok();
+        } else {
+            return Result.fail("Failed to delete carousel image");
+        }
     }
 
     // 获取单个轮播图详情
     @GetMapping("/{imageid}")
-    public Carouselimages getCarouselimage(@PathVariable Integer imageid) {
-        return carouselimagesService.getById(imageid);
+    public Result getCarouselimage(@PathVariable Integer imageid) {
+        Carouselimages carouselimage = carouselimagesService.getById(imageid);
+        if (carouselimage != null) {
+            return Result.ok(carouselimage);
+        } else {
+            return Result.fail("Carousel image not found");
+        }
     }
 
     // 获取所有轮播图
     @GetMapping
-    public List<Carouselimages> getAllCarouselimages() {
-        return carouselimagesService.list();
+    public Result getAllCarouselimages() {
+        List<Carouselimages> carouselimages = carouselimagesService.list();
+        return Result.ok(carouselimages);
     }
 }
