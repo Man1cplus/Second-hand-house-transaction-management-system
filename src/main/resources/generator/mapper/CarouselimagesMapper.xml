@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generator.mapper.CarouselimagesMapper">
+
+    <resultMap id="BaseResultMap" type="generator.domain.Carouselimages">
+            <id property="imageid" column="ImageID" />
+            <result property="imagepath" column="ImagePath" />
+            <result property="sortorder" column="SortOrder" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ImageID,ImagePath,SortOrder
+    </sql>
+</mapper>

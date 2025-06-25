@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generator.mapper.ContractsMapper">
+
+    <resultMap id="BaseResultMap" type="generator.domain.Contracts">
+            <id property="contractid" column="ContractID" />
+            <result property="propertyid" column="PropertyID" />
+            <result property="buyerid" column="BuyerID" />
+            <result property="signingdate" column="SigningDate" />
+            <result property="contractstatus" column="ContractStatus" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ContractID,PropertyID,BuyerID,SigningDate,ContractStatus
+    </sql>
+</mapper>

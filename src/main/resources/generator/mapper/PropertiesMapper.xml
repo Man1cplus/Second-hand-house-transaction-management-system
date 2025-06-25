@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generator.mapper.PropertiesMapper">
+
+    <resultMap id="BaseResultMap" type="generator.domain.Properties">
+            <id property="propertyid" column="PropertyID" />
+            <result property="title" column="Title" />
+            <result property="description" column="Description" />
+            <result property="price" column="Price" />
+            <result property="area" column="Area" />
+            <result property="layout" column="Layout" />
+            <result property="address" column="Address" />
+            <result property="publishdate" column="PublishDate" />
+            <result property="status" column="Status" />
+            <result property="sellerid" column="SellerID" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        PropertyID,Title,Description,Price,Area,Layout,
+        Address,PublishDate,Status,SellerID
+    </sql>
+</mapper>

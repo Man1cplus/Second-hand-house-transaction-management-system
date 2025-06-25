@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generator.mapper.ViewingappointmentsMapper">
+
+    <resultMap id="BaseResultMap" type="generator.domain.Viewingappointments">
+            <id property="appointmentid" column="AppointmentID" />
+            <result property="propertyid" column="PropertyID" />
+            <result property="buyerid" column="BuyerID" />
+            <result property="appointmenttime" column="AppointmentTime" />
+            <result property="status" column="Status" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        AppointmentID,PropertyID,BuyerID,AppointmentTime,Status
+    </sql>
+</mapper>
