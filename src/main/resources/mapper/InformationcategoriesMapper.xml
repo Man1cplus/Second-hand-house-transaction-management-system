@@ -2,14 +2,12 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="generator.mapper.InformationcategoriesMapper">
+<mapper namespace="org.secondhand.secondhandhousebackend.mapper.InformationcategoriesMapper">
 
-    <resultMap id="BaseResultMap" type="generator.domain.Informationcategories">
+    <resultMap id="BaseResultMap" type="org.secondhand.secondhandhousebackend.entity.Informationcategories">
             <id property="infocategoryid" column="InfoCategoryID" />
             <result property="infocategoryname" column="InfoCategoryName" />
     </resultMap>
 
-    <sql id="Base_Column_List">
-        InfoCategoryID,InfoCategoryName
-    </sql>
+
 </mapper>

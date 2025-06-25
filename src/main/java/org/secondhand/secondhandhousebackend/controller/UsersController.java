@@ -1,5 +1,10 @@
 package org.secondhand.secondhandhousebackend.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.secondhand.secondhandhousebackend.DTO.LoginFormDTO;
+import org.secondhand.secondhandhousebackend.DTO.Result;
+import org.secondhand.secondhandhousebackend.VO.UserVO;
 import org.secondhand.secondhandhousebackend.entity.Users;
 import org.secondhand.secondhandhousebackend.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +18,16 @@ public class UsersController {
 
     @Autowired
     private UsersService usersService;
+
+    @PostMapping("/login")
+    public Result login(@RequestBody LoginFormDTO loginForm, HttpSession session) {
+        boolean success = usersService.login(loginForm, session);
+        if (success) {
+            Users user = (Users) session.getAttribute("user");
+            return Result.ok(UserVO.fromUser(user));
+        }
+        return Result.fail("用户名或密码错误");
+    }
 
     // 创建新用户
     @PostMapping

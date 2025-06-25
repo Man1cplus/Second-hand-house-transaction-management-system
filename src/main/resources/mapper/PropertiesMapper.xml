@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="generator.mapper.PropertiesMapper">
+<mapper namespace="org.secondhand.secondhandhousebackend.mapper.PropertiesMapper">
 
-    <resultMap id="BaseResultMap" type="generator.domain.Properties">
+    <resultMap id="BaseResultMap" type="org.secondhand.secondhandhousebackend.entity.Properties">
             <id property="propertyid" column="PropertyID" />
             <result property="title" column="Title" />
             <result property="description" column="Description" />
@@ -17,8 +17,5 @@
             <result property="sellerid" column="SellerID" />
     </resultMap>
 
-    <sql id="Base_Column_List">
-        PropertyID,Title,Description,Price,Area,Layout,
-        Address,PublishDate,Status,SellerID
-    </sql>
+
 </mapper>

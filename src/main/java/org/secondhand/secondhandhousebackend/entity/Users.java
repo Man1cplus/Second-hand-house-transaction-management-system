@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.util.Date;
 import lombok.Data;
+import lombok.Getter;
+import org.secondhand.secondhandhousebackend.enums.UserRole;
 
 /**
  * 
@@ -48,7 +50,7 @@ public class Users {
     /**
      * 角色
      */
-    private Object role;
+    private UserRole role;
 
     @Override
     public boolean equals(Object that) {
@@ -102,3 +104,4 @@ public class Users {
         return sb.toString();
     }
 }
+
