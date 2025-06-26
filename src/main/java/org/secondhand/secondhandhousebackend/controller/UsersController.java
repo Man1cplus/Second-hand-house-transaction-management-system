@@ -1,9 +1,9 @@
 package org.secondhand.secondhandhousebackend.controller;
 
 import jakarta.servlet.http.HttpSession;
-import org.apache.logging.log4j.message.ReusableMessage;
 import org.secondhand.secondhandhousebackend.DTO.LoginFormDTO;
 import org.secondhand.secondhandhousebackend.DTO.Result;
+import org.secondhand.secondhandhousebackend.DTO.UsersDTO;
 import org.secondhand.secondhandhousebackend.VO.UserVO;
 import org.secondhand.secondhandhousebackend.entity.Users;
 import org.secondhand.secondhandhousebackend.service.UsersService;
@@ -87,5 +87,12 @@ public class UsersController {
     public Result getAllUsers() {
         List<Users> users = usersService.list();
         return Result.ok(users);
+    }
+
+    // 个人信息修改
+
+    @PutMapping("/profile/username")
+    public Result changeUser(@RequestBody UsersDTO UserDto,HttpSession session) {
+        return usersService.changeUser(UserDto, session);
     }
 }

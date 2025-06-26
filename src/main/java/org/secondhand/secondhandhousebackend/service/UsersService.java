@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import jakarta.servlet.http.HttpSession;
 import org.secondhand.secondhandhousebackend.DTO.LoginFormDTO;
 import org.secondhand.secondhandhousebackend.DTO.Result;
+import org.secondhand.secondhandhousebackend.DTO.UsersDTO;
 import org.secondhand.secondhandhousebackend.entity.Users;
 
 /**
@@ -19,4 +20,6 @@ public interface UsersService extends IService<Users> {
     boolean login(LoginFormDTO loginForm, HttpSession session);
 
     Users getByName(String username);
+
+    Result changeUser(UsersDTO userDto,HttpSession session);
 }

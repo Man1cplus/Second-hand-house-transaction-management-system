@@ -6,9 +6,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.secondhand.secondhandhousebackend.DTO.LoginFormDTO;
 import org.secondhand.secondhandhousebackend.DTO.Result;
+import org.secondhand.secondhandhousebackend.DTO.UsersDTO;
 import org.secondhand.secondhandhousebackend.entity.Users;
 import org.secondhand.secondhandhousebackend.mapper.UsersMapper;
 import org.secondhand.secondhandhousebackend.service.UsersService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,6 +23,8 @@ import org.springframework.stereotype.Service;
 public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
     implements UsersService{
 
+    @Autowired
+    private UsersMapper usersMapper; ;
     /**
      * 通过用户名来得到用户
      * @param username
@@ -65,6 +70,33 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
         }
         save(users);
         return Result.ok();
+    }
+
+    @Override
+    public Result changeUser(UsersDTO usersDTO,HttpSession session) {
+        Users user = (Users) session.getAttribute("user");
+
+        if (user == null) {
+            return Result.fail("用户还没有登录！");
+        }
+        // 校验用户名是否已存在
+        if (usersMapper.existsByUsername(usersDTO.getUsername()) > 0) {
+            return Result.fail("用户名已被占用");
+        }
+
+        // 校验邮箱是否已存在
+        if (usersMapper.existsByEmail(usersDTO.getEmail()) > 0) {
+            return Result.fail("邮箱已被占用");
+        }
+        user.setUsername(usersDTO.getUsername());
+        user.setEmail(usersDTO.getEmail());
+        user.setPassword(usersDTO.getPassword());
+        user.setPhonenumber(user.getPhonenumber());
+        if (!updateById(user)) {
+            return Result.fail("用户信息更新失败");
+        }
+
+        return Result.ok("用户信息更新成功");
     }
 }
 
