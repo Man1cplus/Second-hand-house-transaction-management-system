@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.secondhand.secondhandhousebackend.DTO.LoginFormDTO;
+import org.secondhand.secondhandhousebackend.DTO.Result;
 import org.secondhand.secondhandhousebackend.entity.Users;
 import org.secondhand.secondhandhousebackend.mapper.UsersMapper;
 import org.secondhand.secondhandhousebackend.service.UsersService;
@@ -47,6 +48,23 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
 
         session.setAttribute("user", user);
         return true;
+    }
+
+    public Result register(Users users, HttpSession session) {
+        if (StringUtils.isEmpty(users.getUsername())) {
+            return Result.fail("用户名不能为空");
+        }
+        if (StringUtils.isEmpty(users.getPassword())) {
+            return Result.fail("密码不能为空");
+        }
+        if (StringUtils.isEmpty(users.getEmail())) {
+            return Result.fail("邮箱不能为空");
+        }
+        if (StringUtils.isEmpty(users.getPhonenumber())){
+            return Result.fail("手机号不能为空");
+        }
+        save(users);
+        return Result.ok();
     }
 }
 

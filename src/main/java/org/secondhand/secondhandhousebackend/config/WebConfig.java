@@ -15,6 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns(
                         "/users/login",      // 登录接口
+                        "/users/register",   // 注册接口
                         "/error",           // 错误页面
                         "/css/**",          // CSS静态资源
                         "/js/**",           // JS静态资源

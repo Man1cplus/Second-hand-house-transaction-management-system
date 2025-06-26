@@ -4,6 +4,7 @@ package org.secondhand.secondhandhousebackend.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import jakarta.servlet.http.HttpSession;
 import org.secondhand.secondhandhousebackend.DTO.LoginFormDTO;
+import org.secondhand.secondhandhousebackend.DTO.Result;
 import org.secondhand.secondhandhousebackend.entity.Users;
 
 /**
@@ -12,6 +13,8 @@ import org.secondhand.secondhandhousebackend.entity.Users;
 * @createDate 2025-06-24 17:39:39
 */
 public interface UsersService extends IService<Users> {
+
+    Result register(Users users, HttpSession session);
 
     boolean login(LoginFormDTO loginForm, HttpSession session);
 

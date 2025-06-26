@@ -1,6 +1,7 @@
 package org.secondhand.secondhandhousebackend.controller;
 
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.message.ReusableMessage;
 import org.secondhand.secondhandhousebackend.DTO.LoginFormDTO;
 import org.secondhand.secondhandhousebackend.DTO.Result;
 import org.secondhand.secondhandhousebackend.VO.UserVO;
@@ -27,6 +28,13 @@ public class UsersController {
             return Result.ok(UserVO.fromUser(user));
         }
         return Result.fail("用户名或密码错误");
+    }
+
+    @PostMapping("/register")
+    public Result registerUser(@RequestBody Users user, HttpSession session) {
+        //用户名，密码
+        Result result = usersService.register(user, session);
+        return result;
     }
 
     // 创建新用户
