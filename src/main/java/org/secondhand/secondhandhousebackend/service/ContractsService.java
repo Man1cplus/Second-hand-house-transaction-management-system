@@ -2,6 +2,9 @@ package org.secondhand.secondhandhousebackend.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import jakarta.servlet.http.HttpSession;
+import org.secondhand.secondhandhousebackend.DTO.PurchaseRequest;
+import org.secondhand.secondhandhousebackend.DTO.Result;
 import org.secondhand.secondhandhousebackend.entity.Contracts;
 
 /**
@@ -11,4 +14,5 @@ import org.secondhand.secondhandhousebackend.entity.Contracts;
 */
 public interface ContractsService extends IService<Contracts> {
 
+    Result purchaseProperty(PurchaseRequest request,HttpSession session);
 }

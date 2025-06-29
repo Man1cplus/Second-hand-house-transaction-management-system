@@ -1,5 +1,7 @@
 package org.secondhand.secondhandhousebackend.controller;
 
+import jakarta.servlet.http.HttpSession;
+import org.secondhand.secondhandhousebackend.DTO.PurchaseRequest;
 import org.secondhand.secondhandhousebackend.DTO.Result;
 import org.secondhand.secondhandhousebackend.entity.Contracts;
 import org.secondhand.secondhandhousebackend.service.ContractsService;
@@ -14,6 +16,7 @@ public class ContractsController {
 
     @Autowired
     private ContractsService contractsService;
+
 
     // 创建新的合同
     @PostMapping
@@ -66,4 +69,11 @@ public class ContractsController {
         List<Contracts> contracts = contractsService.list();
         return Result.ok(contracts);
     }
+
+    // 用户购买房源
+    @PostMapping("/purchase")
+    public Result purchaseProperty(@RequestBody PurchaseRequest request, HttpSession session) {
+        return contractsService.purchaseProperty(request,session);
+    }
+
 }
