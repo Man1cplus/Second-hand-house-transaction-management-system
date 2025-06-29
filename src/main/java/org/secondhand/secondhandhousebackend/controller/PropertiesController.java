@@ -20,6 +20,7 @@ public class PropertiesController {
     public Result createProperty(@RequestBody Properties property) {
         boolean success = propertiesService.save(property);
         if (success) {
+            propertiesService.savePropertyTags(property.getPropertyid(), property.getTagIds());
             return Result.ok();
         } else {
             return Result.fail("Failed to create property");
@@ -32,6 +33,7 @@ public class PropertiesController {
         property.setPropertyid(propertyid);
         boolean success = propertiesService.updateById(property);
         if (success) {
+            propertiesService.updatePropertyTags(propertyid, property.getTagIds());
             return Result.ok();
         } else {
             return Result.fail("Failed to update property");
@@ -41,7 +43,7 @@ public class PropertiesController {
     // 删除房源
     @DeleteMapping("/{propertyid}")
     public Result deleteProperty(@PathVariable Integer propertyid) {
-        boolean success = propertiesService.removeById(propertyid);
+        boolean success = propertiesService.deletePropertyWithTagsAndFavorites(propertyid);
         if (success) {
             return Result.ok();
         } else {
@@ -54,6 +56,7 @@ public class PropertiesController {
     public Result getProperty(@PathVariable Integer propertyid) {
         Properties property = propertiesService.getById(propertyid);
         if (property != null) {
+            property.setTagIds(propertiesService.getPropertyTagIds(propertyid));
             return Result.ok(property);
         } else {
             return Result.fail("Property not found");
@@ -64,6 +67,9 @@ public class PropertiesController {
     @GetMapping
     public Result getAllProperties() {
         List<Properties> propertiesList = propertiesService.list();
+        for (Properties property : propertiesList) {
+            property.setTagIds(propertiesService.getPropertyTagIds(property.getPropertyid()));
+        }
         return Result.ok(propertiesList);
     }
 }

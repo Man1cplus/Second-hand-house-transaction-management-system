@@ -2,6 +2,7 @@ package org.secondhand.secondhandhousebackend.mapper;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.secondhand.secondhandhousebackend.entity.Infotagrelations;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -12,6 +13,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2025-06-29 15:12:30
 * @Entity org.secondhand.secondhandhousebackend.service.entity.Infotagrelations
 */
+@Mapper
 public interface InfotagrelationsMapper extends BaseMapper<Infotagrelations> {
     // 删除资讯的所有标签关系
     @Delete("DELETE FROM InfoTagRelations WHERE infoid = #{infoid}")
