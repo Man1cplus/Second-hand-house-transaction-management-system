@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.secondhand.secondhandhousebackend.mapper.UserfavoritesMapper">
+
+    <resultMap id="BaseResultMap" type="org.secondhand.secondhandhousebackend.entity.Userfavorites">
+            <id property="favoriteid" column="FavoriteID" />
+            <result property="userid" column="UserID" />
+            <result property="propertyid" column="PropertyID" />
+            <result property="collectiontime" column="CollectionTime" />
+    </resultMap>
+
+
+</mapper>

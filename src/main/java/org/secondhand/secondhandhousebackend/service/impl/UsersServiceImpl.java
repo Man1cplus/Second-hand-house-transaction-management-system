@@ -11,7 +11,6 @@ import org.secondhand.secondhandhousebackend.entity.Users;
 import org.secondhand.secondhandhousebackend.mapper.UsersMapper;
 import org.secondhand.secondhandhousebackend.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 /**
