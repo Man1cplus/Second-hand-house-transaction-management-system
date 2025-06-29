@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
 import lombok.Data;
 
 /**
@@ -65,6 +67,10 @@ public class Properties {
      * 卖家ID，外键，关联用户表
      */
     private Integer sellerid;
+
+    // 用于在程序中处理标签关系的字段
+    @TableField(exist = false) // 防止 MyBatis Plus 尝试将此字段映射到数据库表
+    private List<Integer> tagIds;
 
     @Override
     public boolean equals(Object that) {

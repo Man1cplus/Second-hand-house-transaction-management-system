@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.util.Date;
+import java.util.List;
+
 import lombok.Data;
 
 /**
@@ -44,6 +46,10 @@ public class Information {
      * 发布者ID，外键，关联用户表
      */
     private Integer publisherid;
+
+    // 用于存储标签 ID 列表
+    @TableField(exist = false) // 防止 MyBatis Plus 尝试将此字段映射到数据库表
+    private List<Integer> tagIds;
 
     @Override
     public boolean equals(Object that) {

@@ -20,9 +20,13 @@ public class InformationController {
     public Result createInformation(@RequestBody Information information) {
         boolean success = informationService.save(information);
         if (success) {
+            // 获取刚刚插入的资讯 ID
+            Integer infoid = information.getInfoid();
+            // 保存资讯与标签的关系
+            informationService.saveInfoTags(infoid, information.getTagIds());
             return Result.ok();
         } else {
-            return Result.fail("Failed to create information");
+            return Result.fail("创建资讯失败!");
         }
     }
 
@@ -32,20 +36,22 @@ public class InformationController {
         information.setInfoid(infoid);
         boolean success = informationService.updateById(information);
         if (success) {
+            // 更新资讯与标签的关系
+            informationService.updateInfoTags(infoid, information.getTagIds());
             return Result.ok();
         } else {
-            return Result.fail("Failed to update information");
+            return Result.fail("更新资讯失败!");
         }
     }
 
     // 删除资讯
     @DeleteMapping("/{infoid}")
     public Result deleteInformation(@PathVariable Integer infoid) {
-        boolean success = informationService.removeById(infoid);
+        boolean success = informationService.deleteInfoWithTags(infoid);
         if (success) {
             return Result.ok();
         } else {
-            return Result.fail("Failed to delete information");
+            return Result.fail("删除资讯失败!");
         }
     }
 
@@ -54,6 +60,8 @@ public class InformationController {
     public Result getInformation(@PathVariable Integer infoid) {
         Information information = informationService.getById(infoid);
         if (information != null) {
+            // 获取资讯的标签信息
+            information.setTagIds(informationService.getInfoTagIds(infoid));
             return Result.ok(information);
         } else {
             return Result.fail("Information not found");
@@ -64,6 +72,10 @@ public class InformationController {
     @GetMapping
     public Result getAllInformation() {
         List<Information> informationList = informationService.list();
+        // 获取每个资讯的标签信息
+        for (Information information : informationList) {
+            information.setTagIds(informationService.getInfoTagIds(information.getInfoid()));
+        }
         return Result.ok(informationList);
     }
 }
