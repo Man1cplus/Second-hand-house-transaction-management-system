@@ -60,17 +60,6 @@ public class ViewingappointmentsController {
         }
     }
 
-    // 创建新的预约看房
-    @PostMapping
-    public Result createViewingAppointment(@RequestBody Viewingappointments appointment) {
-        boolean success = viewingappointmentsService.save(appointment);
-        if (success) {
-            return Result.ok();
-        } else {
-            return Result.fail("Failed to create viewing appointment");
-        }
-    }
-
     // 更新预约看房信息
     @PutMapping("/{appointmentid}")
     public Result updateViewingAppointment(@PathVariable Integer appointmentid, @RequestBody Viewingappointments appointment) {

@@ -1,5 +1,6 @@
 package org.secondhand.secondhandhousebackend.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.secondhand.secondhandhousebackend.DTO.LoginFormDTO;
 import org.secondhand.secondhandhousebackend.DTO.Result;
@@ -96,4 +97,20 @@ public class UsersController {
         return usersService.changeUser(UserDto, session);
     }
 
+    @PostMapping("/logout")
+    public Result logout(HttpServletRequest request) {
+        try {
+            // 清除会话信息
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+
+            // 登出成功，返回成功结果
+            return Result.ok();
+        } catch (Exception e) {
+            // 登出失败，返回失败结果
+            return Result.fail("登出失败：" + e.getMessage());
+        }
+    }
 }
