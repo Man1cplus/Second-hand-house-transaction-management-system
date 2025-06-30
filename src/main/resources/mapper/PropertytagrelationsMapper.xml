@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.secondhand.secondhandhousebackend.mapper.PropertytagrelationsMapper">
+
+    <resultMap id="BaseResultMap" type="org.secondhand.secondhandhousebackend.entity.Propertytagrelations">
+            <id property="propertyid" column="PropertyID" />
+            <id property="tagid" column="TagID" />
+    </resultMap>
+
+
+</mapper>
