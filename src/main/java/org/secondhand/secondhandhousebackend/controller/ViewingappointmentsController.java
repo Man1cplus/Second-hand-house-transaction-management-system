@@ -1,7 +1,10 @@
 package org.secondhand.secondhandhousebackend.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.secondhand.secondhandhousebackend.DTO.Result;
+import org.secondhand.secondhandhousebackend.entity.Users;
 import org.secondhand.secondhandhousebackend.entity.Viewingappointments;
+import org.secondhand.secondhandhousebackend.enums.ViewStatus;
 import org.secondhand.secondhandhousebackend.service.ViewingappointmentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +17,48 @@ public class ViewingappointmentsController {
 
     @Autowired
     private ViewingappointmentsService viewingappointmentsService;
+
+
+    // 用户申请预约看房
+    @PostMapping("/apply")
+    public Result applyViewingAppointment(@RequestBody Viewingappointments appointment, HttpSession session) {
+        Users user = (Users) session.getAttribute("user");
+        Integer buyerId = user.getUserid(); // 从会话中获取当前登录用户的ID
+        if (buyerId == null) {
+            return Result.fail("User not logged in");
+        }
+
+        appointment.setBuyerid(buyerId); // 设置买家ID
+        appointment.setStatus(ViewStatus.待审批); // 设置预约状态为“待审批”
+        boolean success = viewingappointmentsService.save(appointment);
+        if (success) {
+            return Result.ok("Appointment applied successfully");
+        } else {
+            return Result.fail("Failed to apply viewing appointment");
+        }
+    }
+
+    // 管理员审批预约
+    @PutMapping("/approve/{appointmentid}")
+    public Result approveViewingAppointment(@PathVariable Integer appointmentid, @RequestParam String statusStr) {
+        Viewingappointments appointment = viewingappointmentsService.getById(appointmentid);
+        if (appointment == null) {
+            return Result.fail("Appointment not found");
+        }
+
+        ViewStatus viewStatus = ViewStatus.fromDescription(statusStr);
+        if (viewStatus == null) {
+            return Result.fail("Invalid status");
+        }
+
+        appointment.setStatus(viewStatus); // 设置新的预约状态
+        boolean success = viewingappointmentsService.updateById(appointment);
+        if (success) {
+            return Result.ok("Appointment approved successfully");
+        } else {
+            return Result.fail("Failed to approve viewing appointment");
+        }
+    }
 
     // 创建新的预约看房
     @PostMapping
