@@ -1,6 +1,6 @@
 package org.secondhand.secondhandhousebackend.controller;
 
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import org.secondhand.secondhandhousebackend.DTO.Result;
 import org.secondhand.secondhandhousebackend.entity.Users;
 import org.secondhand.secondhandhousebackend.entity.Viewingappointments;
@@ -21,15 +21,15 @@ public class ViewingappointmentsController {
 
     // 用户申请预约看房
     @PostMapping("/apply")
-    public Result applyViewingAppointment(@RequestBody Viewingappointments appointment, HttpSession session) {
-        Users user = (Users) session.getAttribute("user");
-        Integer buyerId = user.getUserid(); // 从会话中获取当前登录用户的ID
-        if (buyerId == null) {
+    public Result applyViewingAppointment(@RequestBody Viewingappointments appointment, HttpServletRequest request) {
+        // 从request attribute中获取用户信息（由拦截器设置）
+        Users user = (Users) request.getAttribute("user");
+        if (user == null) {
             return Result.fail("User not logged in");
         }
-
+        Integer buyerId = user.getUserid(); // 从request中获取当前登录用户的ID
         appointment.setBuyerid(buyerId); // 设置买家ID
-        appointment.setStatus(ViewStatus.待审批); // 设置预约状态为“待审批”
+        appointment.setStatus(ViewStatus.待审批); // 设置预约状态为"待审批"
         boolean success = viewingappointmentsService.save(appointment);
         if (success) {
             return Result.ok("Appointment applied successfully");

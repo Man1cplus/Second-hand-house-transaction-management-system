@@ -19,6 +19,9 @@ public interface UsersMapper extends BaseMapper<Users> {
 
     @Select("SELECT COUNT(*) FROM users WHERE email = #{email}")
     int existsByEmail(@Param("email") String email);
+
+    @Select("SELECT * FROM users WHERE email = #{email} LIMIT 1")
+    Users selectByEmail(@Param("email") String email);
 }
 
 

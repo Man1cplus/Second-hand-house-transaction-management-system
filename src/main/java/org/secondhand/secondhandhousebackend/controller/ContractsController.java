@@ -1,5 +1,6 @@
 package org.secondhand.secondhandhousebackend.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.secondhand.secondhandhousebackend.DTO.PurchaseRequest;
 import org.secondhand.secondhandhousebackend.DTO.Result;
@@ -72,8 +73,17 @@ public class ContractsController {
 
     // 用户购买房源
     @PostMapping("/purchase")
-    public Result purchaseProperty(@RequestBody PurchaseRequest request, HttpSession session) {
-        return contractsService.purchaseProperty(request,session);
+    public Result purchaseProperty(@RequestBody PurchaseRequest request, HttpServletRequest httpRequest) {
+        // 从request attribute中获取用户信息（由拦截器设置）
+        org.secondhand.secondhandhousebackend.entity.Users user = 
+            (org.secondhand.secondhandhousebackend.entity.Users) httpRequest.getAttribute("user");
+        if (user == null) {
+            return Result.fail("用户未登录");
+        }
+        // 创建临时session用于兼容service方法
+        HttpSession session = httpRequest.getSession();
+        session.setAttribute("user", user);
+        return contractsService.purchaseProperty(request, session);
     }
 
 }

@@ -1,5 +1,6 @@
 package org.secondhand.secondhandhousebackend.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.secondhand.secondhandhousebackend.DTO.Result;
 import org.secondhand.secondhandhousebackend.entity.Users;
@@ -14,16 +15,27 @@ public class UserFavoritesController {
     private UserfavoritesService userFavoritesService;
 
     @GetMapping
-    public Result getUserFavorites(@RequestParam Integer page, @RequestParam Integer size,HttpSession session) {
+    public Result getUserFavorites(@RequestParam Integer page, @RequestParam Integer size, HttpServletRequest request) {
         if (page == null || size == null) {
             return Result.fail("分页参数不能为空");
         }
-        return Result.ok(userFavoritesService.getUserFavorites(page, size,session));
+        // 从request attribute中获取用户信息（由拦截器设置）
+        Users user = (Users) request.getAttribute("user");
+        if (user == null) {
+            return Result.fail("用户未登录");
+        }
+        // 创建临时session用于兼容service方法
+        HttpSession session = request.getSession();
+        session.setAttribute("user", user);
+        return Result.ok(userFavoritesService.getUserFavorites(page, size, session));
     }
 
     @PostMapping("/{propertyId}")
-    public Result collectProperty(HttpSession session, @PathVariable Integer propertyId) {
-        Users user = (Users) session.getAttribute("user");
+    public Result collectProperty(HttpServletRequest request, @PathVariable Integer propertyId) {
+        Users user = (Users) request.getAttribute("user");
+        if (user == null) {
+            return Result.fail("用户未登录");
+        }
         int userId = user.getUserid();
         boolean result = userFavoritesService.collectProperty(userId, propertyId);
         if (result) {
@@ -34,8 +46,11 @@ public class UserFavoritesController {
     }
 
     @DeleteMapping("/{propertyId}")
-    public Result unCollectProperty(@PathVariable Integer propertyId, HttpSession session) {
-        Users user = (Users) session.getAttribute("user");
+    public Result unCollectProperty(@PathVariable Integer propertyId, HttpServletRequest request) {
+        Users user = (Users) request.getAttribute("user");
+        if (user == null) {
+            return Result.fail("用户未登录");
+        }
         int userId = user.getUserid();
         boolean result = userFavoritesService.unCollectProperty(userId, propertyId);
         if (result) {
@@ -46,8 +61,11 @@ public class UserFavoritesController {
     }
     //检查是否收藏房源
     @GetMapping("/check/{propertyId}")
-    public Result checkFavorite(HttpSession session, @PathVariable Integer propertyId) {
-        Users user = (Users) session.getAttribute("user");
+    public Result checkFavorite(HttpServletRequest request, @PathVariable Integer propertyId) {
+        Users user = (Users) request.getAttribute("user");
+        if (user == null) {
+            return Result.fail("用户未登录");
+        }
         int userId = user.getUserid();
         return Result.ok(userFavoritesService.isFavorite(userId, propertyId));
     }

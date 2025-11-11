@@ -1,28 +1,96 @@
 package org.secondhand.secondhandhousebackend.interceptor;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import org.secondhand.secondhandhousebackend.DTO.Result;
 import org.secondhand.secondhandhousebackend.entity.Users;
+import org.secondhand.secondhandhousebackend.service.UsersService;
+import org.secondhand.secondhandhousebackend.utils.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+@Component
 public class LoginInterceptor implements HandlerInterceptor {
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private UsersService usersService;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        // 1. 获取Session中的用户信息
-        HttpSession session = request.getSession();
-        Users user = (Users) session.getAttribute("user");
+        // 获取请求路径和方法
+        String requestPath = request.getRequestURI();
+        String method = request.getMethod();
+        
+        // 定义不需要JWT验证的路径（登录和注册接口、文件下载）
+        boolean isPublicPath = requestPath.equals("/users/login") 
+                || requestPath.equals("/users/register")
+                || requestPath.startsWith("/files/download/")  // 文件下载不需要验证
+                || requestPath.startsWith("/error")
+                || requestPath.startsWith("/css/")
+                || requestPath.startsWith("/js/")
+                || requestPath.startsWith("/images/")
+                || requestPath.equals("/favicon.ico");
+        
+        // 如果是公开路径，直接放行
+        if (isPublicPath) {
+            return true;
+        }
+        
+        // 处理OPTIONS预检请求（CORS）
+        if ("OPTIONS".equalsIgnoreCase(method)) {
+            return true;
+        }
+        
+        // 其他所有路径都需要JWT验证
+        // 1. 从请求头中获取token
+        String authHeader = request.getHeader("Authorization");
+        String token = jwtUtil.getTokenFromHeader(authHeader);
 
-        // 2. 检查是否登录
-        if (user == null) {
-            // 3. 未登录则返回401错误
+        // 2. 检查token是否存在
+        if (token == null || token.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"success\":false,\"errorMsg\":\"请先登录\"}");
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(objectMapper.writeValueAsString(Result.fail("请先登录")));
             return false;
         }
 
-        // 4. 已登录放行
-        return true;
+        // 3. 验证token
+        if (!jwtUtil.validateToken(token)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(objectMapper.writeValueAsString(Result.fail("Token无效或已过期")));
+            return false;
+        }
+
+        // 4. 从token中获取用户ID，查询用户信息
+        try {
+            Integer userId = jwtUtil.getUserIdFromToken(token);
+            Users user = usersService.getById(userId);
+            
+            if (user == null) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write(objectMapper.writeValueAsString(Result.fail("用户不存在")));
+                return false;
+            }
+
+            // 5. 将用户信息放到request attribute中，供后续使用
+            request.setAttribute("user", user);
+            request.setAttribute("userId", userId);
+            
+            return true;
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(objectMapper.writeValueAsString(Result.fail("Token解析失败")));
+            return false;
+        }
     }
 }

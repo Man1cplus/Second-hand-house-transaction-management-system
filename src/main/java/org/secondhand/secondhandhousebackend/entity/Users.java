@@ -50,6 +50,11 @@ public class Users {
      */
     private UserRole role;
 
+    /**
+     * 头像URI
+     */
+    private String avatar;
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -68,7 +73,8 @@ public class Users {
             && (this.getEmail() == null ? other.getEmail() == null : this.getEmail().equals(other.getEmail()))
             && (this.getPhonenumber() == null ? other.getPhonenumber() == null : this.getPhonenumber().equals(other.getPhonenumber()))
             && (this.getRegistrationtime() == null ? other.getRegistrationtime() == null : this.getRegistrationtime().equals(other.getRegistrationtime()))
-            && (this.getRole() == null ? other.getRole() == null : this.getRole().equals(other.getRole()));
+            && (this.getRole() == null ? other.getRole() == null : this.getRole().equals(other.getRole()))
+            && (this.getAvatar() == null ? other.getAvatar() == null : this.getAvatar().equals(other.getAvatar()));
     }
 
     @Override
@@ -82,6 +88,7 @@ public class Users {
         result = prime * result + ((getPhonenumber() == null) ? 0 : getPhonenumber().hashCode());
         result = prime * result + ((getRegistrationtime() == null) ? 0 : getRegistrationtime().hashCode());
         result = prime * result + ((getRole() == null) ? 0 : getRole().hashCode());
+        result = prime * result + ((getAvatar() == null) ? 0 : getAvatar().hashCode());
         return result;
     }
 
@@ -98,6 +105,7 @@ public class Users {
         sb.append(", phonenumber=").append(phonenumber);
         sb.append(", registrationtime=").append(registrationtime);
         sb.append(", role=").append(role);
+        sb.append(", avatar=").append(avatar);
         sb.append("]");
         return sb.toString();
     }
