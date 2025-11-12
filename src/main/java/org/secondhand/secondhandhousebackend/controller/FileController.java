@@ -89,6 +89,73 @@ public class FileController {
     }
 
     /**
+     * 上传合同文件（仅支持doc、pdf、txt格式）
+     * @param file 上传的合同文件
+     * @return 返回文件的URI
+     */
+    @PostMapping("/upload/contract")
+    public Result uploadContractFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        try {
+            // 检查文件是否为空
+            if (file.isEmpty()) {
+                return Result.fail("文件不能为空");
+            }
+
+            // 检查文件大小（限制为10MB，合同文件可能较大）
+            if (file.getSize() > 10 * 1024 * 1024) {
+                return Result.fail("合同文件大小不能超过10MB");
+            }
+
+            // 获取文件原始名称
+            String originalFilename = file.getOriginalFilename();
+            if (originalFilename == null || originalFilename.isEmpty()) {
+                return Result.fail("文件名不能为空");
+            }
+
+            // 获取文件扩展名
+            String extension = "";
+            int lastDotIndex = originalFilename.lastIndexOf(".");
+            if (lastDotIndex > 0) {
+                extension = originalFilename.substring(lastDotIndex).toLowerCase();
+            }
+
+            // 验证文件格式（仅允许doc、docx、pdf、txt）
+            if (!extension.equals(".doc") && !extension.equals(".docx") && 
+                !extension.equals(".pdf") && !extension.equals(".txt")) {
+                return Result.fail("合同文件格式不支持，仅支持doc、docx、pdf、txt格式");
+            }
+
+            // 生成唯一文件名
+            String uniqueFileName = "contract_" + UUID.randomUUID().toString() + extension;
+
+            // 创建上传目录（如果不存在）
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            // 保存文件
+            Path filePath = uploadPath.resolve(uniqueFileName);
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            // 构建文件URI
+            String fileUri = "/files/download/" + uniqueFileName;
+
+            // 返回结果
+            Map<String, Object> data = new HashMap<>();
+            data.put("uri", fileUri);
+            data.put("filename", uniqueFileName);
+            data.put("originalFilename", originalFilename);
+            data.put("size", file.getSize());
+
+            return Result.ok(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Result.fail("合同文件上传失败: " + e.getMessage());
+        }
+    }
+
+    /**
      * 下载文件
      * @param filename 文件名
      * @return 文件资源

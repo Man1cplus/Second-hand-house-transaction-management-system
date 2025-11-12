@@ -35,9 +35,19 @@ public class Contracts {
     private Date signingdate;
 
     /**
-     * 合同状态，如已签订、已取消
+     * 合同状态，如待审核、已签订、已取消
      */
-    private Object contractstatus;
+    private String contractstatus;
+
+    /**
+     * 卖家ID，外键，关联用户表
+     */
+    private Integer sellerid;
+
+    /**
+     * 合同文件路径
+     */
+    private String contractfile;
 
     @Override
     public boolean equals(Object that) {
@@ -55,7 +65,9 @@ public class Contracts {
             && (this.getPropertyid() == null ? other.getPropertyid() == null : this.getPropertyid().equals(other.getPropertyid()))
             && (this.getBuyerid() == null ? other.getBuyerid() == null : this.getBuyerid().equals(other.getBuyerid()))
             && (this.getSigningdate() == null ? other.getSigningdate() == null : this.getSigningdate().equals(other.getSigningdate()))
-            && (this.getContractstatus() == null ? other.getContractstatus() == null : this.getContractstatus().equals(other.getContractstatus()));
+            && (this.getContractstatus() == null ? other.getContractstatus() == null : this.getContractstatus().equals(other.getContractstatus()))
+            && (this.getSellerid() == null ? other.getSellerid() == null : this.getSellerid().equals(other.getSellerid()))
+            && (this.getContractfile() == null ? other.getContractfile() == null : this.getContractfile().equals(other.getContractfile()));
     }
 
     @Override
@@ -67,6 +79,8 @@ public class Contracts {
         result = prime * result + ((getBuyerid() == null) ? 0 : getBuyerid().hashCode());
         result = prime * result + ((getSigningdate() == null) ? 0 : getSigningdate().hashCode());
         result = prime * result + ((getContractstatus() == null) ? 0 : getContractstatus().hashCode());
+        result = prime * result + ((getSellerid() == null) ? 0 : getSellerid().hashCode());
+        result = prime * result + ((getContractfile() == null) ? 0 : getContractfile().hashCode());
         return result;
     }
 
@@ -81,6 +95,8 @@ public class Contracts {
         sb.append(", buyerid=").append(buyerid);
         sb.append(", signingdate=").append(signingdate);
         sb.append(", contractstatus=").append(contractstatus);
+        sb.append(", sellerid=").append(sellerid);
+        sb.append(", contractfile=").append(contractfile);
         sb.append("]");
         return sb.toString();
     }

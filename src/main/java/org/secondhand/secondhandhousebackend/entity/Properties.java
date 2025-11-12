@@ -49,6 +49,42 @@ public class Properties {
     private String layout;
 
     /**
+     * 房屋朝向
+     */
+    @TableField("Orientation")
+    private String orientation;
+
+    /**
+     * 所在楼层
+     */
+    @TableField("Floor")
+    private String floor;
+
+    /**
+     * 装修情况
+     */
+    @TableField("Decoration")
+    private String decoration;
+
+    /**
+     * 建筑类型
+     */
+    @TableField("BuildingType")
+    private String buildingType;
+
+    /**
+     * 建筑年代
+     */
+    @TableField("BuildYear")
+    private String buildYear;
+
+    /**
+     * 梯户比例
+     */
+    @TableField("ElevatorRatio")
+    private String elevatorRatio;
+
+    /**
      * 地址，不为空
      */
     private String address;
@@ -68,9 +104,18 @@ public class Properties {
      */
     private Integer sellerid;
 
+    /**
+     * 房源图片URI列表，JSON格式存储
+     */
+    private String photos;
+
     // 用于在程序中处理标签关系的字段
     @TableField(exist = false) // 防止 MyBatis Plus 尝试将此字段映射到数据库表
     private List<Integer> tagIds;
+
+    // 用于在程序中处理图片列表的字段
+    @TableField(exist = false) // 防止 MyBatis Plus 尝试将此字段映射到数据库表
+    private List<String> photoList;
 
     @Override
     public boolean equals(Object that) {
@@ -90,6 +135,12 @@ public class Properties {
             && (this.getPrice() == null ? other.getPrice() == null : this.getPrice().equals(other.getPrice()))
             && (this.getArea() == null ? other.getArea() == null : this.getArea().equals(other.getArea()))
             && (this.getLayout() == null ? other.getLayout() == null : this.getLayout().equals(other.getLayout()))
+            && (this.getOrientation() == null ? other.getOrientation() == null : this.getOrientation().equals(other.getOrientation()))
+            && (this.getFloor() == null ? other.getFloor() == null : this.getFloor().equals(other.getFloor()))
+            && (this.getDecoration() == null ? other.getDecoration() == null : this.getDecoration().equals(other.getDecoration()))
+            && (this.getBuildingType() == null ? other.getBuildingType() == null : this.getBuildingType().equals(other.getBuildingType()))
+            && (this.getBuildYear() == null ? other.getBuildYear() == null : this.getBuildYear().equals(other.getBuildYear()))
+            && (this.getElevatorRatio() == null ? other.getElevatorRatio() == null : this.getElevatorRatio().equals(other.getElevatorRatio()))
             && (this.getAddress() == null ? other.getAddress() == null : this.getAddress().equals(other.getAddress()))
             && (this.getPublishdate() == null ? other.getPublishdate() == null : this.getPublishdate().equals(other.getPublishdate()))
             && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
@@ -106,6 +157,12 @@ public class Properties {
         result = prime * result + ((getPrice() == null) ? 0 : getPrice().hashCode());
         result = prime * result + ((getArea() == null) ? 0 : getArea().hashCode());
         result = prime * result + ((getLayout() == null) ? 0 : getLayout().hashCode());
+        result = prime * result + ((getOrientation() == null) ? 0 : getOrientation().hashCode());
+        result = prime * result + ((getFloor() == null) ? 0 : getFloor().hashCode());
+        result = prime * result + ((getDecoration() == null) ? 0 : getDecoration().hashCode());
+        result = prime * result + ((getBuildingType() == null) ? 0 : getBuildingType().hashCode());
+        result = prime * result + ((getBuildYear() == null) ? 0 : getBuildYear().hashCode());
+        result = prime * result + ((getElevatorRatio() == null) ? 0 : getElevatorRatio().hashCode());
         result = prime * result + ((getAddress() == null) ? 0 : getAddress().hashCode());
         result = prime * result + ((getPublishdate() == null) ? 0 : getPublishdate().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
@@ -125,6 +182,12 @@ public class Properties {
         sb.append(", price=").append(price);
         sb.append(", area=").append(area);
         sb.append(", layout=").append(layout);
+        sb.append(", orientation=").append(orientation);
+        sb.append(", floor=").append(floor);
+        sb.append(", decoration=").append(decoration);
+        sb.append(", buildingType=").append(buildingType);
+        sb.append(", buildYear=").append(buildYear);
+        sb.append(", elevatorRatio=").append(elevatorRatio);
         sb.append(", address=").append(address);
         sb.append(", publishdate=").append(publishdate);
         sb.append(", status=").append(status);

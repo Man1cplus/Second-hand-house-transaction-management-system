@@ -11,6 +11,12 @@
             <result property="price" column="Price" />
             <result property="area" column="Area" />
             <result property="layout" column="Layout" />
+            <result property="orientation" column="Orientation" />
+            <result property="floor" column="Floor" />
+            <result property="decoration" column="Decoration" />
+            <result property="buildingType" column="BuildingType" />
+            <result property="buildYear" column="BuildYear" />
+            <result property="elevatorRatio" column="ElevatorRatio" />
             <result property="address" column="Address" />
             <result property="publishdate" column="PublishDate" />
             <result property="status" column="Status" />
