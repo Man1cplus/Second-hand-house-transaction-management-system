@@ -1,6 +1,5 @@
 package org.secondhand.secondhandhousebackend.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +7,7 @@ import org.secondhand.secondhandhousebackend.DTO.Result;
 import org.secondhand.secondhandhousebackend.entity.Properties;
 import org.secondhand.secondhandhousebackend.entity.Users;
 import org.secondhand.secondhandhousebackend.enums.UserRole;
+import org.secondhand.secondhandhousebackend.mapper.PropertiesMapper;
 import org.secondhand.secondhandhousebackend.service.PropertiesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +21,9 @@ public class PropertiesController {
 
     @Autowired
     private PropertiesService propertiesService;
+    
+    @Autowired
+    private PropertiesMapper propertiesMapper;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -152,7 +155,8 @@ public class PropertiesController {
     @GetMapping("/{propertyid}")
     public Result getProperty(@PathVariable Integer propertyid) {
         try {
-            Properties property = propertiesService.getById(propertyid);
+            // 使用自定义查询方法，确保字段正确映射（特别是经纬度字段）
+            Properties property = propertiesMapper.selectById(propertyid);
             if (property != null) {
                 property.setTagIds(propertiesService.getPropertyTagIds(propertyid));
                 // 将JSON字符串反序列化为图片列表
@@ -187,19 +191,16 @@ public class PropertiesController {
             }
             
             // 根据用户角色过滤房源
+            // 使用自定义查询方法，确保字段正确映射（特别是经纬度字段）
             if (user.getRole() == UserRole.管理员) {
                 // 管理员可以查看所有房源
-                propertiesList = propertiesService.list();
+                propertiesList = propertiesMapper.selectAllWithResultMap();
             } else if (user.getRole() == UserRole.卖家) {
                 // 卖家只能查看自己的房源
-                LambdaQueryWrapper<Properties> queryWrapper = new LambdaQueryWrapper<>();
-                queryWrapper.eq(Properties::getSellerid, user.getUserid());
-                propertiesList = propertiesService.list(queryWrapper);
+                propertiesList = propertiesMapper.selectBySellerId(user.getUserid());
             } else {
                 // 买家、经纪人等只能查看"在售"状态的房源（审核通过的房源）
-                LambdaQueryWrapper<Properties> queryWrapper = new LambdaQueryWrapper<>();
-                queryWrapper.eq(Properties::getStatus, "在售");
-                propertiesList = propertiesService.list(queryWrapper);
+                propertiesList = propertiesMapper.selectByStatus("在售");
             }
             
             // 处理每个房源的标签和图片

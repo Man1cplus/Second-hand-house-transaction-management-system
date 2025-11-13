@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.secondhand.secondhandhousebackend.mapper.BillsMapper">
+
+    <resultMap id="BaseResultMap" type="org.secondhand.secondhandhousebackend.entity.Bills">
+        <id property="billid" column="BillID" />
+        <result property="contractid" column="ContractID" />
+        <result property="buyerid" column="BuyerID" />
+        <result property="sellerid" column="SellerID" />
+        <result property="propertyid" column="PropertyID" />
+        <result property="propertyprice" column="PropertyPrice" />
+        <result property="servicefee" column="ServiceFee" />
+        <result property="billstatus" column="BillStatus" />
+        <result property="createdate" column="CreateDate" />
+        <result property="paydate" column="PayDate" />
+        <result property="paymentmethod" column="PaymentMethod" />
+        <result property="paymenttransactionid" column="PaymentTransactionID" />
+        <result property="remark" column="Remark" />
+        <result property="createdat" column="CreatedAt" />
+        <result property="updatedat" column="UpdatedAt" />
+    </resultMap>
+
+</mapper>
+

@@ -90,6 +90,42 @@ public class Properties {
     private String address;
 
     /**
+     * 经度，用于精确定位房源位置
+     */
+    @TableField("Longitude")
+    private BigDecimal longitude;
+
+    /**
+     * 纬度，用于精确定位房源位置
+     */
+    @TableField("Latitude")
+    private BigDecimal latitude;
+
+    /**
+     * 省份，如：北京市、上海市
+     */
+    @TableField("Province")
+    private String province;
+
+    /**
+     * 城市，如：北京市、上海市
+     */
+    @TableField("City")
+    private String city;
+
+    /**
+     * 区/县，如：朝阳区、海淀区
+     */
+    @TableField("District")
+    private String district;
+
+    /**
+     * 街道/详细地址，如：朝阳门南大街xx号
+     */
+    @TableField("Street")
+    private String street;
+
+    /**
      * 发布日期
      */
     private Date publishdate;
@@ -142,6 +178,12 @@ public class Properties {
             && (this.getBuildYear() == null ? other.getBuildYear() == null : this.getBuildYear().equals(other.getBuildYear()))
             && (this.getElevatorRatio() == null ? other.getElevatorRatio() == null : this.getElevatorRatio().equals(other.getElevatorRatio()))
             && (this.getAddress() == null ? other.getAddress() == null : this.getAddress().equals(other.getAddress()))
+            && (this.getLongitude() == null ? other.getLongitude() == null : this.getLongitude().equals(other.getLongitude()))
+            && (this.getLatitude() == null ? other.getLatitude() == null : this.getLatitude().equals(other.getLatitude()))
+            && (this.getProvince() == null ? other.getProvince() == null : this.getProvince().equals(other.getProvince()))
+            && (this.getCity() == null ? other.getCity() == null : this.getCity().equals(other.getCity()))
+            && (this.getDistrict() == null ? other.getDistrict() == null : this.getDistrict().equals(other.getDistrict()))
+            && (this.getStreet() == null ? other.getStreet() == null : this.getStreet().equals(other.getStreet()))
             && (this.getPublishdate() == null ? other.getPublishdate() == null : this.getPublishdate().equals(other.getPublishdate()))
             && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
             && (this.getSellerid() == null ? other.getSellerid() == null : this.getSellerid().equals(other.getSellerid()));
@@ -164,6 +206,12 @@ public class Properties {
         result = prime * result + ((getBuildYear() == null) ? 0 : getBuildYear().hashCode());
         result = prime * result + ((getElevatorRatio() == null) ? 0 : getElevatorRatio().hashCode());
         result = prime * result + ((getAddress() == null) ? 0 : getAddress().hashCode());
+        result = prime * result + ((getLongitude() == null) ? 0 : getLongitude().hashCode());
+        result = prime * result + ((getLatitude() == null) ? 0 : getLatitude().hashCode());
+        result = prime * result + ((getProvince() == null) ? 0 : getProvince().hashCode());
+        result = prime * result + ((getCity() == null) ? 0 : getCity().hashCode());
+        result = prime * result + ((getDistrict() == null) ? 0 : getDistrict().hashCode());
+        result = prime * result + ((getStreet() == null) ? 0 : getStreet().hashCode());
         result = prime * result + ((getPublishdate() == null) ? 0 : getPublishdate().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         result = prime * result + ((getSellerid() == null) ? 0 : getSellerid().hashCode());
@@ -189,6 +237,12 @@ public class Properties {
         sb.append(", buildYear=").append(buildYear);
         sb.append(", elevatorRatio=").append(elevatorRatio);
         sb.append(", address=").append(address);
+        sb.append(", longitude=").append(longitude);
+        sb.append(", latitude=").append(latitude);
+        sb.append(", province=").append(province);
+        sb.append(", city=").append(city);
+        sb.append(", district=").append(district);
+        sb.append(", street=").append(street);
         sb.append(", publishdate=").append(publishdate);
         sb.append(", status=").append(status);
         sb.append(", sellerid=").append(sellerid);

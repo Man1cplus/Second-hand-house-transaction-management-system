@@ -12,6 +12,7 @@ import org.secondhand.secondhandhousebackend.entity.Users;
 import org.secondhand.secondhandhousebackend.mapper.ContractsMapper;
 import org.secondhand.secondhandhousebackend.mapper.PropertiesMapper;
 import org.secondhand.secondhandhousebackend.mapper.UsersMapper;
+import org.secondhand.secondhandhousebackend.service.BillsService;
 import org.secondhand.secondhandhousebackend.service.ContractsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,9 @@ public class ContractsServiceImpl extends ServiceImpl<ContractsMapper, Contracts
 
     @Autowired
     private UsersMapper usersMapper;
+
+    @Autowired
+    private BillsService billsService;
 
     /**
      * 验证用户是否存在（代码层外键验证）
@@ -163,6 +167,25 @@ public class ContractsServiceImpl extends ServiceImpl<ContractsMapper, Contracts
             return Result.fail("该房源已存在待审核的合同申请");
         }
 
+        // 买家申请合同时，必须先支付服务费才能创建合同
+        // 检查是否已支付服务费
+        Boolean paidServiceFee = request.getPaidServiceFee();
+        String paymentMethod = request.getPaymentMethod();
+        String paymentTransactionId = request.getPaymentTransactionId();
+        
+        // 必须支付服务费才能创建合同
+        if (paidServiceFee == null || !paidServiceFee) {
+            return Result.fail("必须支付服务费才能申请合同");
+        }
+        
+        // 支付信息验证
+        if (paymentMethod == null || paymentMethod.isEmpty()) {
+            return Result.fail("支付方式不能为空");
+        }
+        if (paymentTransactionId == null || paymentTransactionId.isEmpty()) {
+            return Result.fail("支付交易号不能为空");
+        }
+
         // 创建合同申请
         Contracts contract = new Contracts();
         contract.setPropertyid(propertyId);
@@ -177,6 +200,23 @@ public class ContractsServiceImpl extends ServiceImpl<ContractsMapper, Contracts
         boolean contractSaved = this.save(contract);
         if (!contractSaved) {
             return Result.fail("合同申请创建失败");
+        }
+
+        // 买家申请合同时，创建买家的服务费账单（账单金额 = 服务费，房源价格的0.5%）
+        // 注意：服务费（0.5%）必须在申请时支付，账单状态为"已支付"
+        Result billResult = billsService.createServiceFeeBill(
+            contract.getContractid(), 
+            buyerId, 
+            "buyer",
+            true,  // 已支付
+            paymentMethod,
+            paymentTransactionId
+        );
+        
+        if (!billResult.getSuccess()) {
+            // 如果账单创建失败，回滚合同申请
+            this.removeById(contract.getContractid());
+            return Result.fail("服务费账单创建失败: " + billResult.getErrorMsg());
         }
 
         return Result.ok("合同申请提交成功");
@@ -256,6 +296,19 @@ public class ContractsServiceImpl extends ServiceImpl<ContractsMapper, Contracts
         boolean contractUpdated = this.updateById(contract);
         if (!contractUpdated) {
             return Result.fail("合同签订失败");
+        }
+
+        // 卖家签订合同时，创建卖家的服务费账单（0.5%房价）
+        // 注意：这里创建的是卖家的服务费账单，买家在申请时已经创建了买家的服务费账单
+        Result sellerServiceFeeResult = billsService.createServiceFeeBill(contractId, sellerId, "seller");
+        if (!sellerServiceFeeResult.getSuccess()) {
+            System.err.println("合同签订成功，但卖家服务费账单创建失败: " + sellerServiceFeeResult.getErrorMsg());
+        }
+
+        // 卖家签订完合同后，创建买家的房款账单（完整房价）
+        Result propertyPriceBillResult = billsService.createPropertyPriceBill(contractId);
+        if (!propertyPriceBillResult.getSuccess()) {
+            System.err.println("合同签订成功，但买家房款账单创建失败: " + propertyPriceBillResult.getErrorMsg());
         }
 
         return Result.ok("合同签订成功");

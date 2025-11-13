@@ -18,10 +18,58 @@
             <result property="buildYear" column="BuildYear" />
             <result property="elevatorRatio" column="ElevatorRatio" />
             <result property="address" column="Address" />
+            <result property="longitude" column="Longitude" />
+            <result property="latitude" column="Latitude" />
+            <result property="province" column="Province" />
+            <result property="city" column="City" />
+            <result property="district" column="District" />
+            <result property="street" column="Street" />
             <result property="publishdate" column="PublishDate" />
             <result property="status" column="Status" />
             <result property="sellerid" column="SellerID" />
     </resultMap>
 
+    <!-- 自定义查询：使用 resultMap 确保字段正确映射 -->
+    <select id="selectAllWithResultMap" resultMap="BaseResultMap">
+        SELECT 
+            PropertyID, Title, Description, Price, Area, Layout,
+            Orientation, Floor, Decoration, BuildingType, BuildYear, ElevatorRatio,
+            Address, Longitude, Latitude, Province, City, District, Street,
+            PublishDate, Status, SellerID, Photos
+        FROM properties
+    </select>
+
+    <!-- 根据条件查询房源 -->
+    <select id="selectByStatus" resultMap="BaseResultMap">
+        SELECT 
+            PropertyID, Title, Description, Price, Area, Layout,
+            Orientation, Floor, Decoration, BuildingType, BuildYear, ElevatorRatio,
+            Address, Longitude, Latitude, Province, City, District, Street,
+            PublishDate, Status, SellerID, Photos
+        FROM properties
+        WHERE Status = #{status}
+    </select>
+
+    <!-- 根据卖家ID查询房源 -->
+    <select id="selectBySellerId" resultMap="BaseResultMap">
+        SELECT 
+            PropertyID, Title, Description, Price, Area, Layout,
+            Orientation, Floor, Decoration, BuildingType, BuildYear, ElevatorRatio,
+            Address, Longitude, Latitude, Province, City, District, Street,
+            PublishDate, Status, SellerID, Photos
+        FROM properties
+        WHERE SellerID = #{sellerid}
+    </select>
+
+    <!-- 根据ID查询单个房源（使用 resultMap 确保字段正确映射） -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT 
+            PropertyID, Title, Description, Price, Area, Layout,
+            Orientation, Floor, Decoration, BuildingType, BuildYear, ElevatorRatio,
+            Address, Longitude, Latitude, Province, City, District, Street,
+            PublishDate, Status, SellerID, Photos
+        FROM properties
+        WHERE PropertyID = #{propertyid}
+    </select>
 
 </mapper>
