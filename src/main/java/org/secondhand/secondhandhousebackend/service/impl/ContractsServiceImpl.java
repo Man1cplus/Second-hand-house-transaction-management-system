@@ -289,11 +289,15 @@ public class ContractsServiceImpl extends ServiceImpl<ContractsMapper, Contracts
             return Result.fail("房源已售出");
         }
 
-        // 更新合同状态为"已签订"（重写的updateById方法会自动更新房源状态为"已售出"）
-        contract.setContractstatus("已签订");
-        contract.setSigningdate(new Date());
+        // 更新合同状态为"已签订"
+        // 注意：创建一个新的对象用于更新，以避免 MyBatis 一级缓存导致 updateById 中的状态比较失效
+        Contracts updateContract = new Contracts();
+        updateContract.setContractid(contractId);
+        updateContract.setContractstatus("已签订");
+        updateContract.setSigningdate(new Date());
+        updateContract.setPropertyid(contract.getPropertyid()); // 传入房源ID以便后续更新状态
 
-        boolean contractUpdated = this.updateById(contract);
+        boolean contractUpdated = this.updateById(updateContract);
         if (!contractUpdated) {
             return Result.fail("合同签订失败");
         }

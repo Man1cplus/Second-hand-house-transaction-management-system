@@ -49,3 +49,14 @@ jwt:
 # 文件上传配置
 file:
   upload-dir: uploads  # 文件上传目录
+
+# SpringDoc OpenAPI (Swagger) 配置
+springdoc:
+  api-docs:
+    path: /v3/api-docs  # API文档JSON路径
+  swagger-ui:
+    path: /swagger-ui.html  # Swagger UI访问路径
+    enabled: true  # 启用Swagger UI
+    try-it-out-enabled: true  # 启用"试用"功能
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json

@@ -1,8 +1,8 @@
 package org.secondhand.secondhandhousebackend.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.secondhand.secondhandhousebackend.DTO.Result;
 import org.secondhand.secondhandhousebackend.entity.Properties;
 import org.secondhand.secondhandhousebackend.entity.Users;
@@ -10,10 +10,20 @@ import org.secondhand.secondhandhousebackend.enums.UserRole;
 import org.secondhand.secondhandhousebackend.mapper.PropertiesMapper;
 import org.secondhand.secondhandhousebackend.service.PropertiesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/properties")
@@ -178,7 +188,8 @@ public class PropertiesController {
 
     // 获取所有房源（根据用户角色过滤：卖家只能看到自己的房源，管理员可以看到所有房源）
     @GetMapping
-    public Result getAllProperties(HttpServletRequest request) {
+    public Result getAllProperties(HttpServletRequest request, 
+                                   @RequestParam(required = false) Boolean includeAllStatus) {
         try {
             // 从request attribute中获取用户信息（由拦截器设置）
             Users user = (Users) request.getAttribute("user");
@@ -196,11 +207,19 @@ public class PropertiesController {
                 // 管理员可以查看所有房源
                 propertiesList = propertiesMapper.selectAllWithResultMap();
             } else if (user.getRole() == UserRole.卖家) {
-                // 卖家只能查看自己的房源
+                // 卖家只能查看自己的房源（包括所有状态，因为需要在账单、合同中查看）
                 propertiesList = propertiesMapper.selectBySellerId(user.getUserid());
             } else {
-                // 买家、经纪人等只能查看"在售"状态的房源（审核通过的房源）
-                propertiesList = propertiesMapper.selectByStatus("在售");
+                // 买家、经纪人等：
+                // 如果请求包含 includeAllStatus=true（用于账单、合同等管理页面），返回所有状态的房源
+                // 否则只返回"在售"状态的房源（用于房源浏览页面）
+                if (Boolean.TRUE.equals(includeAllStatus)) {
+                    // 在账单、合同、预约管理等场景下，买家需要看到所有相关房源
+                    propertiesList = propertiesMapper.selectAllWithResultMap();
+                } else {
+                    // 在房源浏览场景下，只显示"在售"状态的房源
+                    propertiesList = propertiesMapper.selectByStatus("在售");
+                }
             }
             
             // 处理每个房源的标签和图片

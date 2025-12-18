@@ -28,10 +28,13 @@ public class LoginInterceptor implements HandlerInterceptor {
         String requestPath = request.getRequestURI();
         String method = request.getMethod();
         
-        // 定义不需要JWT验证的路径（登录和注册接口、文件下载）
+        // 定义不需要JWT验证的路径（登录和注册接口、文件下载、Swagger文档）
         boolean isPublicPath = requestPath.equals("/users/login") 
                 || requestPath.equals("/users/register")
                 || requestPath.startsWith("/files/download/")  // 文件下载不需要验证
+                || requestPath.startsWith("/swagger-ui")  // Swagger UI
+                || requestPath.startsWith("/v3/api-docs")  // Swagger API文档
+                || requestPath.startsWith("/swagger-resources")  // Swagger资源
                 || requestPath.startsWith("/error")
                 || requestPath.startsWith("/css/")
                 || requestPath.startsWith("/js/")

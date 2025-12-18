@@ -133,7 +133,7 @@ public class Properties {
     /**
      * 状态，如在售、已售出
      */
-    private Object status;
+    private String status;
 
     /**
      * 卖家ID，外键，关联用户表
